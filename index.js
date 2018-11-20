@@ -7,7 +7,8 @@ const initPocket = require('./init-pocket')
 const getPocketItems = require('./get-pocket-items')
 
 const stateFolderPath = path.join(__dirname, 'state')
-const pocketItemsFilePath = path.join(stateFolderPath, 'synced.json')
+const pocketItemsFilePathJSON = path.join(stateFolderPath, 'synced.json')
+const pocketItemsFilePathYML = path.join(stateFolderPath, 'synced.yml')
 const { POCKET_CONSUMER_KEY } = require('./secrets.json')
 
 main(process.argv.slice(2)[0])
@@ -21,12 +22,12 @@ async function main (POCKET_ACCESS_TOKEN) {
 
   let synced = {}
   try {
-    synced = fs.readFileSync(pocketItemsFilePath, 'utf-8')
+    synced = fs.readFileSync(pocketItemsFilePathJSON, 'utf-8')
     synced = JSON.parse(synced)
   } catch (err) {
     try { fs.mkdirSync(stateFolderPath) } catch (errFolderExists) {}
     synced = { lastSynced: new Date().toISOString(), items: [] }
-    fs.writeFileSync(pocketItemsFilePath, JSON.stringify(synced, null, 2))
+    fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }
 
   if (!POCKET_ACCESS_TOKEN) {
@@ -41,17 +42,22 @@ async function main (POCKET_ACCESS_TOKEN) {
   const itemsToAdd = remotePocketItems.filter(newItems(synced.items))
   if (itemsToAdd.length === 0) {
     console.log('no new items to add')
-    process.exit(0)
+  } else {
+    console.log('items to add:\n', itemsToAdd.map(item => item.resolved_title).join('\n'), '\n')
+    itemsToAdd.forEach(item => {
+      console.log(`adding: "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}`)
+    })
+
+    synced.items = synced.items.concat(itemsToAdd)
+    synced.lastSynced = new Date().toISOString()
+    fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }
 
-  console.log('items to add:\n', itemsToAdd.map(item => item.resolved_title).join('\n'))
-  itemsToAdd.forEach(item => {
-    console.log(`adding: "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}`)
-  })
-
-  synced.items = synced.items.concat(itemsToAdd)
-  synced.lastSynced = new Date().toISOString()
-  fs.writeFileSync(pocketItemsFilePath, JSON.stringify(synced, null, 2))
+  const asYML = synced.items.map(item => `
+- title: ${item.resolved_title}
+  url: ${item.resolved_url}
+  id: ${item.item_id}`.trim()).join('\n')
+  fs.writeFileSync(pocketItemsFilePathYML, asYML)
 }
 
 function newItems (syncedItems) {
