@@ -15,7 +15,7 @@ module.exports = async (POCKET_ACCESS_TOKEN) => {
   })
 
   const list = JSON.parse(items).list
-  const normalizedItems = Object.keys(list).map(k => list[k])
+  const normalizedItems = Object.keys(list).map(k => list[k]).filter(i => i.resolved_title && i.resolved_url)
 
   return normalizedItems
 }
