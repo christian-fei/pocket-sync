@@ -1,6 +1,5 @@
 {
   "name": "pocket-sync",
-  "private": true,
   "version": "1.0.0",
   "description": "https://christianfei.com",
   "bin": "index.js",
