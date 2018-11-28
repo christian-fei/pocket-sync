@@ -11,6 +11,10 @@ const pocketItemsFilePathJSON = path.join(stateFolderPath, 'synced.json')
 const pocketItemsFilePathYML = path.join(stateFolderPath, 'synced.yml')
 
 main(process.argv[2], process.argv[3])
+.then(() => {
+  process.stdout.write(`🕐  Sync completed: ${pocketItemsFilePathYML}\n`)
+  process.exit(0)
+})
 .catch(err => { console.error(err); process.exit(1) })
 
 async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
@@ -32,20 +36,21 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
 
   if (!POCKET_ACCESS_TOKEN) {
     POCKET_ACCESS_TOKEN = await initPocket(POCKET_CONSUMER_KEY)
+    process.stdout.write(`🚀  This is the access token to use to be authenticated: ${POCKET_ACCESS_TOKEN}\n`)
   }
 
   let remotePocketItems = await getPocketItems(POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN)
 
   // console.log(JSON.stringify(remotePocketItems, null, 2))
-  console.log('synced items, remote items:', synced.items.length, remotePocketItems.length)
+  // console.log('synced items, remote items:', synced.items.length, remotePocketItems.length)
 
   const itemsToAdd = remotePocketItems.filter(newItems(synced.items))
   if (itemsToAdd.length === 0) {
-    console.log('no new items to add')
+    process.stdout.write(`👌  Everything up to date\n`)
   } else {
-    console.log('items to add:\n', itemsToAdd.map(item => item.resolved_title).join('\n'), '\n')
+    process.stdout.write(`👌  Found unsynced pocket items:`)
     itemsToAdd.forEach(item => {
-      console.log(`adding: "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}`)
+      process.stdoute.write(`  - "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}\n`)
     })
 
     synced.items = synced.items.concat(itemsToAdd)
