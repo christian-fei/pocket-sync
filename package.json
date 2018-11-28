@@ -1,7 +1,7 @@
 {
   "name": "@christian_fei/pocket-sync",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "https://christianfei.com",
   "bin": "index.js",
   "main": "index.js",
