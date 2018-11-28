@@ -59,11 +59,11 @@ function handleWsMessage (ws) {
       console.log('add:item', payload)
       let pocketItems = read(pocketItemsFilePath, '[]')
       pocketItems = JSON.parse(pocketItems)
-      const item = pocketItems.find(({item_id: itemId}) => itemId === payload)
+      const item = pocketItems.find(({id: itemId}) => itemId === payload)
 
       pocketItems.lastAdded = new Date().toISOString()
       pocketItems.items = Array.isArray(pocketItems.items) ? pocketItems.items : []
-      pocketItems.items = pocketItems.items.reduce((acc, item) => item.item_id === payload ? acc : acc.concat([item]), [item])
+      pocketItems.items = pocketItems.items.reduce((acc, item) => item.id === payload ? acc : acc.concat([item]), [item])
 
       fs.writeFileSync(pocketItemsFilePath, JSON.stringify(pocketItems, null, 2))
       console.log('✍️  [ws] send message', message)
@@ -71,7 +71,7 @@ function handleWsMessage (ws) {
       return ws.send(JSON.stringify({
         type: 'added:item',
         payload: {
-          item_id: payload,
+          id: payload,
           status: 'success'
         }
       }))
@@ -87,7 +87,7 @@ function handleWsMessage (ws) {
       return ws.send(JSON.stringify({
         type: 'blacklisted:item',
         payload: {
-          item_id: payload,
+          id: payload,
           status: 'success'
         }
       }))

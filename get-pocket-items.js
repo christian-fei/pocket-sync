@@ -16,5 +16,13 @@ module.exports = async (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) => {
   const list = JSON.parse(items).list
   const normalizedItems = Object.keys(list).map(k => list[k]).filter(i => i.resolved_title && i.resolved_url)
 
-  return normalizedItems
+  const mappedItems = normalizedItems
+  .map(item => ({
+    id: item.item_id,
+    title: item.resolved_title,
+    url: item.resolved_url,
+    date: new Date(+item.time_added * 1000).toISOString().substring(0, 10)
+  }))
+
+  return mappedItems
 }

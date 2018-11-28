@@ -57,22 +57,22 @@
             }
             console.log('json.payload', json.payload)
             json.payload.forEach(item => {
-              const exists = !!document.querySelector(`[data-item-id="${item.item_id}"]`)
+              const exists = !!document.querySelector(`[data-item-id="${item.id}"]`)
               console.log('exists', exists)
               if (exists) return
               const itemElement = document.createElement('li')
               itemElement.classList.add('box')
-              itemElement.dataset.itemId = item.item_id
+              itemElement.dataset.itemId = item.id
               itemElement.innerHTML = `
 <div class="columns">
   <div class="column">
-    <a style="color: black; text-decoration: underline;" href="${item.resolved_url}" target="_blank">${item.resolved_title}</a>
+    <a style="color: black; text-decoration: underline;" href="${item.url}" target="_blank">${item.title}</a>
   </div>
   <div class="column">
-    <form onsubmit="addItem(event)" data-item-id="${item.item_id}">
+    <form onsubmit="addItem(event)" data-item-id="${item.id}">
       <button class="button is-small add-item">Add</button>
     </form>
-    <form onsubmit="blacklistItem(event)" data-item-id="${item.item_id}">
+    <form onsubmit="blacklistItem(event)" data-item-id="${item.id}">
       <button class="button is-small blacklist-item is-danger">Blacklist</button>
     </form>
   </div>

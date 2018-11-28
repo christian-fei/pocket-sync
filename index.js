@@ -32,6 +32,8 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
     fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }
 
+  synced.items.sort((a, b) => b.date.localeCompare(a.date))
+
   if (!POCKET_ACCESS_TOKEN) {
     POCKET_ACCESS_TOKEN = await initPocket(POCKET_CONSUMER_KEY)
     process.stdout.write(`🚀  This is the access token to use to be authenticated: ${POCKET_ACCESS_TOKEN}\n`)
@@ -48,24 +50,25 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   } else {
     process.stdout.write(`👌  Found unsynced pocket items:`)
     itemsToAdd.forEach(item => {
-      process.stdout.write(`  - "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}\n`)
+      process.stdout.write(`  - "${item.title}" (${item.id}) -> ${item.url}\n`)
     })
 
-    synced.items = synced.items.concat(itemsToAdd)
+    synced.items = synced.items.concat(itemsToAdd).sort((a, b) => b.date.localeCompare(a.date))
     synced.lastSynced = new Date().toISOString()
     fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }
 
   const asYML = synced.items.map(item => `
-- title: "${item.resolved_title}"
-  url: ${item.resolved_url}
-  id: ${item.item_id}`.trim()).join('\n')
+- title: "${item.title}"
+  url: ${item.url}
+  date: ${item.date}
+  id: ${item.id}`.trim()).join('\n')
   fs.writeFileSync(pocketItemsFilePathYML, asYML)
 }
 
 function newItems (syncedItems) {
-  const ids = syncedItems.map(i => i.item_id)
-  return item => !ids.includes(item && item.item_id)
+  const ids = syncedItems.map(i => i.id)
+  return item => !ids.includes(item && item.id)
 }
 
 function helpText () {
