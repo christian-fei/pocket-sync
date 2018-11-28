@@ -54,7 +54,7 @@ async function main (POCKET_ACCESS_TOKEN) {
   }
 
   const asYML = synced.items.map(item => `
-- title: ${item.resolved_title}
+- title: "${item.resolved_title}"
   url: ${item.resolved_url}
   id: ${item.item_id}`.trim()).join('\n')
   fs.writeFileSync(pocketItemsFilePathYML, asYML)
