@@ -1,9 +1,7 @@
 const got = require('got')
-const waitForUserInput = require('wait-for-user-input')
+const headers = { 'Content-Type': 'application/json', 'X-Accept': 'application/json' }
 
 module.exports = async (POCKET_CONSUMER_KEY) => {
-  const headers = { 'Content-Type': 'application/json', 'X-Accept': 'application/json' }
-
   const { body: oauthRequestBody } = await got.post('https://getpocket.com/v3/oauth/request', {
     headers,
     body: JSON.stringify({
@@ -18,8 +16,28 @@ module.exports = async (POCKET_CONSUMER_KEY) => {
 
   const POCKET_URL = `https://getpocket.com/auth/authorize?request_token=${POCKET_REQUEST_TOKEN}&redirect_uri=https://getpocket.com`
 
-  await waitForUserInput(`👉  Open the following url in a browser and log in with your pocket account: ${POCKET_URL}\n\n⚡️  PRESS ENTER TO CONTINUE AFTER LOGGING IN\n`)
+  process.stdout.write(`👉  Open the following url in a browser and log in with your pocket account: ${POCKET_URL}\n\n⚡️  (link will expire in 20 seconds)\n`)
 
+  let authResponse
+  let retries = 0
+
+  do {
+    try {
+      authResponse = await authorize(POCKET_CONSUMER_KEY, POCKET_REQUEST_TOKEN)
+    } catch (err) {
+      retries++
+      await new Promise((resolve, reject) => setTimeout(resolve, 1000))
+    }
+  } while (retries < 20 && !authResponse)
+
+  if (!authResponse) { return }
+
+  const { access_token: POCKET_ACCESS_TOKEN } = JSON.parse(authResponse)
+
+  return POCKET_ACCESS_TOKEN
+}
+
+async function authorize (POCKET_CONSUMER_KEY, POCKET_REQUEST_TOKEN) {
   const { body: oauthAuthorizeBody } = await got.post('https://getpocket.com/v3/oauth/authorize', {
     headers,
     body: JSON.stringify({
@@ -28,11 +46,7 @@ module.exports = async (POCKET_CONSUMER_KEY) => {
     })
   })
 
-  // console.log('oauthAuthorizeBody', oauthAuthorizeBody)
-
-  const { access_token: POCKET_ACCESS_TOKEN } = JSON.parse(oauthAuthorizeBody)
-
-  return POCKET_ACCESS_TOKEN
+  return oauthAuthorizeBody
 }
 
 /*
