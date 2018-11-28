@@ -1,6 +1,9 @@
 {
   "name": "@christian_fei/pocket-sync",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.2",
   "description": "https://christianfei.com",
   "bin": "index.js",
