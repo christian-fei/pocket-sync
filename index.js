@@ -58,11 +58,11 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
     fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }
 
-  const asYML = synced.items.map(item => `
-- title: "${item.title}"
-  url: ${item.url}
-  date: ${item.date}
-  id: ${item.id}`.trim()).join('\n')
+  let asYML = `pocket_items:\n`
+  asYML += synced.items.map(item => `  - title: "${item.title}"
+    url: ${item.url}
+    date: ${item.date}
+    id: ${item.id}`).join('\n')
   fs.writeFileSync(pocketItemsFilePathYML, asYML)
 }
 
