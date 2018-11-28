@@ -50,7 +50,7 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   } else {
     process.stdout.write(`👌  Found unsynced pocket items:`)
     itemsToAdd.forEach(item => {
-      process.stdoute.write(`  - "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}\n`)
+      process.stdout.write(`  - "${item.resolved_title}" (${item.item_id}) -> ${item.resolved_url}\n`)
     })
 
     synced.items = synced.items.concat(itemsToAdd)
