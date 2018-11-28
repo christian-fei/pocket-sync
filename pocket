@@ -8,8 +8,8 @@ const path = require('path')
 const initPocket = require('./init-pocket')
 const getPocketItems = require('./get-pocket-items')
 
-const pocketItemsFilePath = path.join(__dirname, 'pocket.json')
-const blackListedItemsFilePath = path.join(__dirname, 'blacklisted-items.json')
+const pocketItemsFilePath = path.join(process.cwd(), 'pocket.json')
+const blackListedItemsFilePath = path.join(process.cwd(), 'blacklisted-items.json')
 
 main(process.argv[2], process.argv[3])
 .catch(err => { console.error(err); process.exit(1) })
@@ -123,6 +123,6 @@ function requestHandler (req, res) {
 }
 
 function index () {
-  const filepath = path.join(__dirname, 'index.html')
+  const filepath = path.join(process.cwd(), 'index.html')
   return read(filepath)
 }
