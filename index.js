@@ -9,14 +9,14 @@ const getPocketItems = require('./get-pocket-items')
 const stateFolderPath = path.join(__dirname, 'state')
 const pocketItemsFilePathJSON = path.join(stateFolderPath, 'synced.json')
 const pocketItemsFilePathYML = path.join(stateFolderPath, 'synced.yml')
-const { POCKET_CONSUMER_KEY } = require('./secrets.json')
 
-main(process.argv.slice(2)[0])
+main(process.argv[2], process.argv[3])
 .catch(err => { console.error(err); process.exit(1) })
 
-async function main (POCKET_ACCESS_TOKEN) {
+async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   if (!POCKET_CONSUMER_KEY) {
-    console.error('💥  please set POCKET_CONSUMER_KEY in secrets.json or pass as an argument')
+    process.stdout.write(helpText())
+    process.stdout.write('\n')
     process.exit(1)
   }
 
@@ -34,7 +34,7 @@ async function main (POCKET_ACCESS_TOKEN) {
     POCKET_ACCESS_TOKEN = await initPocket(POCKET_CONSUMER_KEY)
   }
 
-  let remotePocketItems = await getPocketItems(POCKET_ACCESS_TOKEN)
+  let remotePocketItems = await getPocketItems(POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN)
 
   // console.log(JSON.stringify(remotePocketItems, null, 2))
   console.log('synced items, remote items:', synced.items.length, remotePocketItems.length)
@@ -63,4 +63,14 @@ async function main (POCKET_ACCESS_TOKEN) {
 function newItems (syncedItems) {
   const ids = syncedItems.map(i => i.item_id)
   return item => !ids.includes(item && item.item_id)
+}
+
+function helpText () {
+  return `
+usage:
+
+pocket-sync <POCKET_CONSUMER_KEY> [POCKET_ACCESS_TOKEN]
+
+👉  follow the documentation to obtain an access token: https://getpocket.com/developer/docs/authentication
+`.trim()
 }

@@ -32,11 +32,11 @@ module.exports = async (POCKET_CONSUMER_KEY) => {
 
   const { code: POCKET_REQUEST_TOKEN } = JSON.parse(oauthRequestBody)
 
-  console.log('POCKET_REQUEST_TOKEN', POCKET_REQUEST_TOKEN)
+  // console.log('POCKET_REQUEST_TOKEN', POCKET_REQUEST_TOKEN)
 
-  const POCKET_URL = `https://getpocket.com/auth/authorize?request_token=${POCKET_REQUEST_TOKEN}&redirect_uri=http://localhost:4000`
+  const POCKET_URL = `https://getpocket.com/auth/authorize?request_token=${POCKET_REQUEST_TOKEN}&redirect_uri=https://getpocket.com`
 
-  await waitForUserInput(`Open the following url in a browser and log in with your pocket account: ${POCKET_URL}\nPRESS ENTER TO CONTINUE AFTER LOGGING IN\n`)
+  await waitForUserInput(`👉  Open the following url in a browser and log in with your pocket account: ${POCKET_URL}\n\n⚡️  PRESS ENTER TO CONTINUE AFTER LOGGING IN\n`)
 
   const { body: oauthAuthorizeBody } = await got.post('https://getpocket.com/v3/oauth/authorize', {
     headers,
@@ -50,7 +50,7 @@ module.exports = async (POCKET_CONSUMER_KEY) => {
 
   const { access_token: POCKET_ACCESS_TOKEN } = JSON.parse(oauthAuthorizeBody)
 
-  console.log('POCKET_ACCESS_TOKEN', POCKET_ACCESS_TOKEN)
+  console.log(`🚀  This is the access token to use to be authenticated: ${POCKET_ACCESS_TOKEN}`)
 
   return POCKET_ACCESS_TOKEN
 }
