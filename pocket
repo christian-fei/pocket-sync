@@ -8,8 +8,8 @@ const path = require('path')
 const initPocket = require('./init-pocket')
 const getPocketItems = require('./get-pocket-items')
 
-const pocketItemsFilePath = path.join(__dirname, 'state', 'pocket.json')
-const blackListedItemsFilePath = path.join(__dirname, 'state', 'blacklisted-items.json')
+const pocketItemsFilePath = path.join(__dirname, 'pocket.json')
+const blackListedItemsFilePath = path.join(__dirname, 'blacklisted-items.json')
 
 main(process.argv[2], process.argv[3])
 .catch(err => { console.error(err); process.exit(1) })

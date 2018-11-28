@@ -6,9 +6,8 @@ const path = require('path')
 const initPocket = require('./init-pocket')
 const getPocketItems = require('./get-pocket-items')
 
-const stateFolderPath = path.join(__dirname, 'state')
-const pocketItemsFilePathJSON = path.join(stateFolderPath, 'synced.json')
-const pocketItemsFilePathYML = path.join(stateFolderPath, 'synced.yml')
+const pocketItemsFilePathJSON = path.join(__dirname, 'synced.json')
+const pocketItemsFilePathYML = path.join(__dirname, 'synced.yml')
 
 main(process.argv[2], process.argv[3])
 .then(() => {
@@ -29,7 +28,6 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
     synced = fs.readFileSync(pocketItemsFilePathJSON, 'utf-8')
     synced = JSON.parse(synced)
   } catch (err) {
-    try { fs.mkdirSync(stateFolderPath) } catch (errFolderExists) {}
     synced = { lastSynced: new Date().toISOString(), items: [] }
     fs.writeFileSync(pocketItemsFilePathJSON, JSON.stringify(synced, null, 2))
   }

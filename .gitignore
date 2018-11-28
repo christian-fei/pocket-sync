@@ -1,2 +1,5 @@
 node_modules
-state/*
+blacklisted-items.json
+pocket.json
+synced.json
+synced.yml
