@@ -10,14 +10,13 @@ const getPocketItems = require('./get-pocket-items')
 
 const pocketItemsFilePath = path.join(__dirname, 'state', 'pocket.json')
 const blackListedItemsFilePath = path.join(__dirname, 'state', 'blacklisted-items.json')
-const { POCKET_CONSUMER_KEY } = require('./secrets.json')
 
-main(process.argv.slice(2)[0])
+main(process.argv[2], process.argv[3])
 .catch(err => { console.error(err); process.exit(1) })
 
 let remotePocketItems = []
 
-async function main (POCKET_ACCESS_TOKEN) {
+async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   const httpServer = http.createServer()
   httpServer.on('request', requestHandler)
   httpServer.listen(4000)
@@ -38,7 +37,7 @@ async function main (POCKET_ACCESS_TOKEN) {
   }
 
   try {
-    remotePocketItems = await getPocketItems(POCKET_ACCESS_TOKEN)
+    remotePocketItems = await getPocketItems(POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN)
   } catch (err) {
     console.error('💥  failed to get pocket items, reason:', `"${err.message}"`)
     process.exit(1)

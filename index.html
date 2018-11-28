@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pocket</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <style>
+      html {
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+      html, body {
+        min-height: 100%;
+        height: 100%;
+        background: #f14861;
+        color: white;
+      }
+      body {
+        padding: 0.75em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="instructions">
+      Follow the instructions in terminal
+    </h1>
+
+    <ul class="items"></ul>
+
+    <script type="text/javascript">
+      let ws
+
+      window.addItem = event => {
+        event.preventDefault()
+        const itemId = event.target.dataset.itemId
+        ws.send(JSON.stringify({type: 'add:item', payload: itemId}))
+      }
+      window.blacklistItem = event => {
+        event.preventDefault()
+        const itemId = event.target.dataset.itemId
+        ws.send(JSON.stringify({type: 'blacklist:item', payload: itemId}))
+      }
+
+      const itemsList = document.querySelector('.items')
+
+      ws = new WebSocket('ws://localhost:4000/')
+      ws.onopen = () => {
+        ws.send('"ping"')
+        ws.onmessage = ({data}) => {
+          const json = JSON.parse(data)
+          if (json.type === 'items') {
+            if (json.payload.length > 0) {
+              document.getElementById('instructions').remove()
+            }
+            console.log('json.payload', json.payload)
+            json.payload.forEach(item => {
+              const exists = !!document.querySelector(`[data-item-id="${item.item_id}"]`)
+              console.log('exists', exists)
+              if (exists) return
+              const itemElement = document.createElement('li')
+              itemElement.classList.add('box')
+              itemElement.dataset.itemId = item.item_id
+              itemElement.innerHTML = `
+<div class="columns">
+  <div class="column">
+    <a style="color: black; text-decoration: underline;" href="${item.resolved_url}" target="_blank">${item.resolved_title}</a>
+  </div>
+  <div class="column">
+    <form onsubmit="addItem(event)" data-item-id="${item.item_id}">
+      <button class="button is-small add-item">Add</button>
+    </form>
+    <form onsubmit="blacklistItem(event)" data-item-id="${item.item_id}">
+      <button class="button is-small blacklist-item is-danger">Blacklist</button>
+    </form>
+  </div>
+</div>
+`
+              itemsList.appendChild(itemElement)
+            })
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
