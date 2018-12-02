@@ -8,7 +8,8 @@ module.exports = async (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) => {
     body: JSON.stringify({
       consumer_key: POCKET_CONSUMER_KEY,
       access_token: POCKET_ACCESS_TOKEN,
-      count: 100,
+      // count: 100,
+      state: 'all',
       detailType: 'complete'
     })
   })
