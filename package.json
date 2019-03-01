@@ -15,15 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christian-fei/christian-fei.github.io.git"
+    "url": "git+https://github.com/christian-fei/pocket-sync.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/christian-fei/christian-fei.github.io/issues"
+    "url": "https://github.com/christian-fei/pocket-sync/issues"
   },
-  "homepage": "https://github.com/christian-fei/christian-fei.github.io#readme",
+  "homepage": "https://github.com/christian-fei/pocket-sync#readme",
   "dependencies": {
     "got": "^9.3.2",
     "ws": "^6.1.0"
