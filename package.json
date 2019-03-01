@@ -6,8 +6,8 @@
   },
   "version": "1.5.0",
   "description": "https://christianfei.com",
-  "bin": "index.js",
-  "main": "index.js",
+  "bin": "bin/run",
+  "main": "bin/run",
   "scripts": {
     "interactive": "node pocket",
     "start": "node $npm_package_main",
