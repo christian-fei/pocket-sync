@@ -3,6 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 
+const toYML = require('../lib/to-yml')
 const initPocket = require('../init-pocket')
 const getPocketItems = require('../get-pocket-items')
 
@@ -59,10 +60,7 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   }
 
   let asYML = `pocket_items:\n`
-  asYML += synced.items.map(item => `  - title: "${item.title}"
-    url: ${item.url}
-    date: ${item.date}
-    id: ${item.id}`).join('\n')
+  asYML += synced.items.map(toYML).join('\n')
   fs.writeFileSync(pocketItemsFilePathYML, asYML)
 }
 
