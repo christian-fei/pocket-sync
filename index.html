@@ -24,11 +24,9 @@
     </style>
   </head>
   <body>
-    <h1 id="instructions">
-      Follow the instructions in terminal
-    </h1>
+    <h1 id="instructions">Follow the instructions in terminal</h1>
 
-    <ul class="items"></ul>
+    <div class="items columns is-multiline is-vcentered"></div>
 
     <script type="text/javascript">
       let ws
@@ -60,15 +58,16 @@
               const exists = !!document.querySelector(`[data-item-id="${item.id}"]`)
               console.log('exists', exists)
               if (exists) return
-              const itemElement = document.createElement('li')
-              itemElement.classList.add('box')
+              const itemElement = document.createElement('div')
               itemElement.dataset.itemId = item.id
+              itemElement.classList.add('column')
+              itemElement.classList.add('is-one-third')
               itemElement.innerHTML = `
-<div class="columns">
-  <div class="column">
+<div class="box">
+  <div class="">
     <a style="color: black; text-decoration: underline;" href="${item.url}" target="_blank">${item.title}</a>
   </div>
-  <div class="column">
+  <div class="">
     <form onsubmit="addItem(event)" data-item-id="${item.id}">
       <button class="button is-small add-item">Add</button>
     </form>
