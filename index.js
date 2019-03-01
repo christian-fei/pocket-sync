@@ -10,11 +10,11 @@ const pocketItemsFilePathJSON = path.join(process.cwd(), 'synced.json')
 const pocketItemsFilePathYML = path.join(process.cwd(), 'synced.yml')
 
 main(process.argv[2], process.argv[3])
-.then(() => {
-  process.stdout.write(`🕐  Sync completed: ${pocketItemsFilePathYML}\n`)
-  process.exit(0)
-})
-.catch(err => { console.error(err); process.exit(1) })
+  .then(() => {
+    process.stdout.write(`🕐  Sync completed: ${pocketItemsFilePathYML}\n`)
+    process.exit(0)
+  })
+  .catch(err => { console.error(err); process.exit(1) })
 
 async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   if (!POCKET_CONSUMER_KEY) {
