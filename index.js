@@ -10,11 +10,11 @@ const pocketItemsFilePathJSON = path.join(process.cwd(), 'synced.json')
 const pocketItemsFilePathYML = path.join(process.cwd(), 'synced.yml')
 
 main(process.argv[2], process.argv[3])
-.then(() => {
-  process.stdout.write(`🕐  Sync completed: ${pocketItemsFilePathYML}\n`)
-  process.exit(0)
-})
-.catch(err => { console.error(err); process.exit(1) })
+  .then(() => {
+    process.stdout.write(`🕐  Sync completed: ${pocketItemsFilePathYML}\n`)
+    process.exit(0)
+  })
+  .catch(err => { console.error(err); process.exit(1) })
 
 async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
   if (!POCKET_CONSUMER_KEY) {
@@ -22,6 +22,10 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
     process.stdout.write('\n')
     process.exit(1)
   }
+
+  process.stdout.write(`⬇️  syncing pocket items`)
+
+  const dotIntervalHandle = setInterval(() => process.stdout.write('.'), 700)
 
   let synced = {}
   try {
@@ -41,14 +45,19 @@ async function main (POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN) {
 
   let remotePocketItems = await getPocketItems(POCKET_CONSUMER_KEY, POCKET_ACCESS_TOKEN)
 
-  // console.log(JSON.stringify(remotePocketItems, null, 2))
-  // console.log('synced items, remote items:', synced.items.length, remotePocketItems.length)
+  clearInterval(dotIntervalHandle)
+  process.stdout.write(`\n`)
+
+  // process.stdout.write(JSON.stringify(remotePocketItems, null, 2))
+  // process.stdout.write(`\n`)
+  // process.stdout.write('synced items, remote items:', synced.items.length, remotePocketItems.length)
+  // process.stdout.write(`\n`)
 
   const itemsToAdd = remotePocketItems.filter(newItems(synced.items))
   if (itemsToAdd.length === 0) {
     process.stdout.write(`👌  Everything up to date\n`)
   } else {
-    process.stdout.write(`👌  Found unsynced pocket items:`)
+    process.stdout.write(`⚡️  Found unsynced pocket items:`)
     itemsToAdd.forEach(item => {
       process.stdout.write(`  - "${item.title}" (${item.id}) -> ${item.url}\n`)
     })
