@@ -30,7 +30,7 @@ you'll be asked to open a link to get the consumer key, and use it the next time
 npx @christian_fei/pocket-sync <POCKET_CONSUMER_KEY> <POCKET_ACCESS_TOKEN>
 ```
 
-Find the results in `synced.json` and `synced.yml`
+Find the results in `pocket.json` and `pocket.yml`
 
 # other
 

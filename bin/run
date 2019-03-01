@@ -6,8 +6,8 @@ const path = require('path')
 const initPocket = require('../init-pocket')
 const getPocketItems = require('../get-pocket-items')
 
-const pocketItemsFilePathJSON = path.join(process.cwd(), 'synced.json')
-const pocketItemsFilePathYML = path.join(process.cwd(), 'synced.yml')
+const pocketItemsFilePathJSON = path.join(process.cwd(), 'pocket.json')
+const pocketItemsFilePathYML = path.join(process.cwd(), 'pocket.yml')
 
 main(process.argv[2], process.argv[3])
   .then(() => {

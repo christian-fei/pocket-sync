@@ -1,5 +1,6 @@
 node_modules
 blacklisted-items.json
+pocket.yml
 pocket.json
 synced.json
 synced.yml
