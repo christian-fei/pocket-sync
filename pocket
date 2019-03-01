@@ -12,7 +12,7 @@ const pocketItemsFilePath = path.join(process.cwd(), 'pocket.json')
 const blackListedItemsFilePath = path.join(process.cwd(), 'blacklisted-items.json')
 
 main(process.argv[2], process.argv[3])
-.catch(err => { console.error(err); process.exit(1) })
+  .catch(err => { console.error(err); process.exit(1) })
 
 let remotePocketItems = []
 
@@ -53,13 +53,13 @@ function handleWsMessage (ws) {
   return (message) => {
     console.log('✍️  [ws] sent message', message)
     const parsedMessage = JSON.parse(message) || {}
-    const {type, payload} = parsedMessage
+    const { type, payload } = parsedMessage
 
     if (type === 'add:item') {
       console.log('add:item', payload)
       let pocketItems = read(pocketItemsFilePath, '[]')
       pocketItems = JSON.parse(pocketItems)
-      const item = pocketItems.find(({id: itemId}) => itemId === payload)
+      const item = pocketItems.find(({ id: itemId }) => itemId === payload)
 
       pocketItems.lastAdded = new Date().toISOString()
       pocketItems.items = Array.isArray(pocketItems.items) ? pocketItems.items : []
